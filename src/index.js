@@ -21,7 +21,18 @@ app.use(express.static(publicDirectoryPath));
 io.on("connection", (socket) => {
 	console.log("New WebSocket connection");
 
-	socket.emit("message", generateMessage("Welcome!"));
+	socket.on("join", ({ username, room }) => {
+		socket.join(room);
+
+		socket.emit("message", generateMessage("Welcome!"));
+		socket.broadcast
+			.to(room)
+			.emit("message", generateMessage(`${username} has joined!`));
+
+		// socket.emit, io.emit, socket.broadcast.emit
+		// io.to.emit, socket.broadcast.to.emit
+	});
+
 	socket.broadcast.emit("message", generateMessage("A new user has joined!"));
 
 	socket.on("sendMessage", (message, calback) => {
@@ -31,7 +42,7 @@ io.on("connection", (socket) => {
 			return calback("Profanity is not allowed!");
 		}
 
-		io.emit("message", generateMessage(message));
+		io.to("Center City").emit("message", generateMessage(message));
 		calback();
 	});
 
