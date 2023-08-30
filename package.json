@@ -10,6 +10,7 @@
   "author": "AlexisCast",
   "license": "ISC",
   "dependencies": {
+    "bad-words": "^3.0.4",
     "express": "^4.18.2",
     "socket.io": "^4.7.2"
   },
